@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>shopmax</title>
+
+	<!-- 공통으로 쓰이는 css -->
+    <link rel="stylesheet" th:href="@{https://fonts.googleapis.com/css?family=Mukta:300,400,700}"> 
+    <link rel="stylesheet" th:href="@{/fonts/icomoon/style.css}">
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/magnific-popup.css}">
+    <link rel="stylesheet" th:href="@{/css/jquery-ui.css}">
+    <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}">
+    <link rel="stylesheet" th:href="@{/css/owl.theme.default.min.css}">
+
+    <link rel="stylesheet" th:href="@{/css/aos.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    
+    <!-- 각 페이지의 CSS가 작성될 위치 -->
+	<th:block layout:fragment="css"></th:block>
+
+</head>
+<body>
+	<div class="site-wrap">
+		<div th:replace="fragments/header::header"></div>
+		<div layout:fragment="content" class="content"></div>
+		<div th:replace="fragments/footer::footer"></div>
+	</div>
+
+
+  <!-- 공통으로 쓰이는 js -->
+  <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+  <script th:src="@{/js/jquery-ui.js}"></script>
+  <script th:src="@{/js/popper.min.js}"></script>
+  <script th:src="@{/js/bootstrap.min.js}"></script>
+  <script th:src="@{/js/owl.carousel.min.js}"></script>
+  <script th:src="@{/js/jquery.magnific-popup.min.js}"></script>
+  <script th:src="@{/js/aos.js}"></script>
+
+  <script th:src="@{/js/main.js}"></script>
+  
+  <!-- 각 페이지의 스크립트가 작성될 위치 -->
+  <th:block layout:fragment="script"></th:block>
+</body>
+</html>

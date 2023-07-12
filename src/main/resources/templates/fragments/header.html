@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <div class="site-navbar bg-white py-2" th:fragment="header">
+
+      <div class="search-wrap">
+        <div class="container">
+          <a href="#" class="search-close js-search-close"><span class="icon-close2"></span></a>
+          <form th:action="@{/item/shop}" method="get">
+            <input type="text" name="searchQuery" class="form-control" placeholder="상품검색이 가능합니다.">
+          </form>  
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="logo">
+            <div class="site-logo">
+              <a href="/" class="js-logo-clone">ShopMax</a>
+            </div>
+          </div>
+          <div class="main-nav d-none d-lg-block">
+            <nav class="site-navigation text-right text-md-center" role="navigation">
+              <ul class="site-menu js-clone-nav d-none d-lg-block">
+                <li class="has-children active" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                  <a>관리자 메뉴</a>
+                  <ul class="dropdown">
+                    <li><a href="/admin/item/new">상품등록</a></li>
+                    <li><a href="/admin/items">상품관리</a></li>
+                  </ul>
+                </li>
+                
+                <li><a href="/item/shop">전체상품</a></li>
+                <li><a href="/members/qa">문의하기</a></li>
+                <li><a href="/orders" sec:authorize="isAuthenticated()">구매이력</a></li>
+                <li><a href="/members/login" sec:authorize="isAnonymous()">로그인</a></li>
+                <li><a href="/members/logout" sec:authorize="isAuthenticated()">로그아웃</a></li>
+              </ul>
+            </nav>
+          </div>
+          <div class="icons">
+            <a href="#" class="icons-btn d-inline-block js-search-open"><span class="icon-search"></span></a>
+            <a href="#" class="icons-btn d-inline-block"><span class="icon-heart-o"></span></a>
+            <a href="/cart" class="icons-btn d-inline-block bag" sec:authorize="isAuthenticated()">
+              <span class="icon-shopping-bag"></span>
+              <span class="number">2</span>
+            </a>
+            <a href="#" class="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none"><span class="icon-menu"></span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+</html>

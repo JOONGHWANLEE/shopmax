@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout1}">
+
+<div layout:fragment="content">
+
+	<div class="site-blocks-cover" data-aos="fade">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 ml-auto order-md-2 align-self-start">
+					<div class="site-block-cover-content">
+						<h2 class="sub-title">#New Summer Collection 2019</h2>
+						<h1>Arrivals Sales</h1>
+						<p>
+							<a href="#" class="btn btn-black rounded-0">Shop Now</a>
+						</p>
+					</div>
+				</div>
+				<div class="col-md-6 order-1 align-self-end">
+					<img src="images/model_3.png" alt="Image" class="img-fluid">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="site-section">
+		<div class="container">
+			<div class="title-section mb-5">
+				<h2 class="text-uppercase">
+					<span class="d-block">Discover</span> The Collections
+				</h2>
+			</div>
+			<div class="row align-items-stretch">
+				<div class="col-lg-8">
+					<div class="product-item sm-height full-height bg-gray">
+						<a href="#" class="product-category">Women <span>25
+								items</span></a> <img src="images/model_4.png" alt="Image"
+							class="img-fluid">
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="product-item sm-height bg-gray mb-4">
+						<a href="#" class="product-category">Men <span>25 items</span></a>
+						<img src="images/model_5.png" alt="Image" class="img-fluid">
+					</div>
+
+					<div class="product-item sm-height bg-gray">
+						<a href="#" class="product-category">Shoes <span>25
+								items</span></a> <img src="images/model_6.png" alt="Image"
+							class="img-fluid">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div class="site-section">
+		<div class="container">
+			<div class="row">
+				<div class="title-section mb-5 col-12">
+					<h2 class="text-uppercase">인기 상품</h2>
+				</div>
+			</div>
+			<div class="row">
+				
+				<th:block th:each="item, status: ${itemsRank}">
+				<div class="col-lg-4 col-md-6 item-entry mb-4">
+					<a th:href="'/item/' + ${item.id}" class="product-item md-height bg-gray d-block">
+					<img th:src=${item.imgUrl} th:alt=${item.itemNm} class="img-fluid">
+					</a>
+					<h2 class="item-title">
+						<a th:href="'/item/' + ${item.id}">
+							[[${item.num}]]위 &nbsp;&nbsp;[[${item.itemNm}]]
+						</a>
+					</h2>
+					<strong class="item-price">
+						<del>[[${#numbers.formatInteger(item.price * 1.5, 0, 'COMMA')}]]원</del>
+						 &nbsp;&nbsp;[[${#numbers.formatInteger(item.price, 0, 'COMMA')}]]원
+					</strong>
+
+					<div class="star-rating">
+						<span class="icon-star2 text-warning"></span> <span
+							class="icon-star2 text-warning"></span> <span
+							class="icon-star2 text-warning"></span> <span
+							class="icon-star2 text-warning"></span> <span
+							class="icon-star2 text-warning"></span>
+					</div>
+
+				</div>
+				
+				</th:block>
+				
+
+			</div>
+		</div>
+	</div>
+
+	<div class="site-section">
+		<div class="container">
+			<div class="row">
+				<div class="title-section text-center mb-5 col-12">
+					<h2 class="text-uppercase">신상품</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 block-3">
+					<div class="nonloop-block-3 owl-carousel">
+
+						<th:block th:each="item, status: ${items}">
+	            		<div class="item">
+			                <div class="item-entry">
+			                  <a th:href="'/item/' + ${item.id}" class="product-item md-height bg-gray d-block">
+			                    <img th:src="${item.imgUrl}" alt="Image" class="img-fluid">
+			                  </a>
+			                  <h2 class="item-title"><a th:href="'/item/' + ${item.id}" th:text="${item.itemNm}">Smooth Cloth</a></h2>
+			                  <strong class="item-price">
+			                  <del>[[${#numbers.formatInteger(item.price * 1.5, 0, 'COMMA')}]]원</del>
+								[[${#numbers.formatInteger(item.price, 0, 'COMMA')}]]원</strong>
+			                  <div class="star-rating">
+			                    <span class="icon-star2 text-warning"></span>
+			                    <span class="icon-star2 text-warning"></span>
+			                    <span class="icon-star2 text-warning"></span>
+			                    <span class="icon-star2 text-warning"></span>
+			                    <span class="icon-star2 text-warning"></span>
+			                  </div>
+			                </div>
+			              </div>
+	              	</th:block>
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="site-blocks-cover inner-page py-5" data-aos="fade">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 ml-auto order-md-2 align-self-start">
+					<div class="site-block-cover-content">
+						<h2 class="sub-title">#New Summer Collection 2019</h2>
+						<h1>New Shoes</h1>
+						<p>
+							<a href="#" class="btn btn-black rounded-0">Shop Now</a>
+						</p>
+					</div>
+				</div>
+				<div class="col-md-6 order-1 align-self-end">
+					<img src="images/model_6.png" alt="Image" class="img-fluid">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+</html>

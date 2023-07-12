@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout1}">
+
+<th:block layout:fragment="css">
+	<style>
+</style>
+</th:block>
+
+<div layout:fragment="content">
+
+	<div class="custom-border-bottom py-3">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 mb-0">
+					<a href="index.html">Home</a> <span class="mx-2 mb-0">/</span> <strong
+						class="text-black">Shop</strong>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="site-section">
+		<div class="container">
+
+			<div class="row mb-5">
+				<div class="col-md-9 order-1">
+
+					<div class="row align">
+						<div class="col-md-12 mb-5">
+							<div class="float-md-left">
+								<h2 class="text-black h5">Shop All</h2>
+							</div>
+							<div class="d-flex" th:object="${itemSearchDto}">
+								<div class="dropdown mr-1 ml-md-auto">
+									<button type="button"
+										class="btn btn-white btn-sm dropdown-toggle px-4"
+										id="dropdownMenuOffset" data-toggle="dropdown"
+										aria-haspopup="true" aria-expanded="false">Latest</button>
+									<div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
+										<a class="dropdown-item" href="#">Men</a> <a
+											class="dropdown-item" href="#">Women</a> <a
+											class="dropdown-item" href="#">Children</a>
+									</div>
+								</div>
+								<div class="btn-group">
+									<button type="button"
+										class="btn btn-white btn-sm dropdown-toggle px-4"
+										id="dropdownMenuReference" data-toggle="dropdown">Reference</button>
+									<div class="dropdown-menu"
+										aria-labelledby="dropdownMenuReference">
+										<a class="dropdown-item" href="#">Relevance</a> <a
+											class="dropdown-item" href="#">Name, A to Z</a> <a
+											class="dropdown-item" href="#">Name, Z to A</a>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item" href="#">Price, low to high</a> <a
+											class="dropdown-item" href="#">Price, high to low</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row mb-5">
+						<div th:each="item, status: ${items.getContent()}"
+							class="col-lg-6 col-md-6 item-entry mb-4">
+							<a th:href="'/item/' + ${item.id}"
+								class="product-item md-height bg-gray d-block"> <img
+								th:src="${item.imgUrl}" th:alt="${item.itemNm}" class="img-fluid">
+							</a>
+							<h2 class="item-title">
+								<a th:href="'/item/' + ${item.id}">[[${item.itemNm}]]</a>
+							</h2>
+							<strong class="item-price">
+			                  <del>[[${#numbers.formatInteger(item.price * 1.5, 0, 'COMMA')}]]원</del>
+								[[${#numbers.formatInteger(item.price, 0, 'COMMA')}]]원</strong>
+							
+						</div>
+					</div>
+						<div class="row">
+							<div class="col-md-12 text-center">
+								<nav 
+									th:with="start=${(items.number / maxPage) * maxPage + 1},
+									 end=(${(items.totalPages == 0) ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})"
+									aria-label="...">
+							<ul class="pagination d-flex justify-content-center">
+								<li class="page-item" th:classappend="${items.first} ? 'disabled'">
+									<a class="page-link" th:href="@{'/item/shop' + '?searchQuery=' + ${itemSearchDto.searchQuery} 
+									+'&page=' + ${items.number-1}}">이전</a>
+								</li>
+								<li class="page-item" th:each="page: ${#numbers.sequence(start, end)}"
+									th:classappend="${items.number eq page - 1} ? 'active' : ''">
+									<a class="page-link" th:inline="text" th:href="@{'/item/shop' + '?searchQuery=' + ${itemSearchDto.searchQuery} 
+									+'&page=' + ${page-1}}">
+										[[${page}]]
+									</a>
+								</li>
+								<li class="page-item" th:classappend="${items.last} ? 'disabled'">
+									<a class="page-link" th:href="@{'/item/shop' + '?searchQuery=' + ${itemSearchDto.searchQuery} 
+									+'&page=' + ${items.number+1}}">다음</a>
+								</li>
+							</ul>
+						</nav>
+
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3 order-2 mb-5 mb-md-0">
+						<div class="border p-4 rounded mb-4">
+							<h3 class="mb-3 h6 text-uppercase text-black d-block">Categories</h3>
+							<ul class="list-unstyled mb-0">
+								<li class="mb-1"><a href="#" class="d-flex"><span>Men</span>
+										<span class="text-black ml-auto">(2,220)</span></a></li>
+								<li class="mb-1"><a href="#" class="d-flex"><span>Women</span>
+										<span class="text-black ml-auto">(2,550)</span></a></li>
+								<li class="mb-1"><a href="#" class="d-flex"><span>Children</span>
+										<span class="text-black ml-auto">(2,124)</span></a></li>
+							</ul>
+						</div>
+
+						<div class="border p-4 rounded mb-4">
+							<div class="mb-4">
+								<h3 class="mb-3 h6 text-uppercase text-black d-block">Filter
+									by Price</h3>
+								<div id="slider-range" class="border-primary"></div>
+								<input type="text" name="text" id="amount"
+									class="form-control border-0 pl-0 bg-white" disabled="" />
+							</div>
+
+							<div class="mb-4">
+								<h3 class="mb-3 h6 text-uppercase text-black d-block">Size</h3>
+								<label for="s_sm" class="d-flex"> <input type="checkbox"
+									id="s_sm" class="mr-2 mt-1"> <span class="text-black">Small
+										(2,319)</span>
+								</label> <label for="s_md" class="d-flex"> <input
+									type="checkbox" id="s_md" class="mr-2 mt-1"> <span
+									class="text-black">Medium (1,282)</span>
+								</label> <label for="s_lg" class="d-flex"> <input
+									type="checkbox" id="s_lg" class="mr-2 mt-1"> <span
+									class="text-black">Large (1,392)</span>
+								</label>
+							</div>
+
+							<div class="mb-4">
+								<h3 class="mb-3 h6 text-uppercase text-black d-block">Color</h3>
+								<a href="#" class="d-flex color-item align-items-center"> <span
+									class="bg-danger color d-inline-block rounded-circle mr-2"></span>
+									<span class="text-black">Red (2,429)</span>
+								</a> <a href="#" class="d-flex color-item align-items-center">
+									<span
+									class="bg-success color d-inline-block rounded-circle mr-2"></span>
+									<span class="text-black">Green (2,298)</span>
+								</a> <a href="#" class="d-flex color-item align-items-center">
+									<span class="bg-info color d-inline-block rounded-circle mr-2"></span>
+									<span class="text-black">Blue (1,075)</span>
+								</a> <a href="#" class="d-flex color-item align-items-center">
+									<span
+									class="bg-primary color d-inline-block rounded-circle mr-2"></span>
+									<span class="text-black">Purple (1,075)</span>
+								</a>
+							</div>
+
+						</div>
+					</div>
+				
+			</div>
+		</div>
+
+	</div>
+</div>
+
+	<th:block layout:fragment="script">
+		<script th:inline="javascript">
+			
+		</script>
+	</th:block>
+</html>

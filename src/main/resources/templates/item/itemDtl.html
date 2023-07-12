@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout1}">
+	
+<head>
+	<meta name="_csrf" th:content="${_csrf.token}" />
+	<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+</head>
+	
+<th:block layout:fragment="css">
+	<style>
+	</style>
+</th:block>
+
+<div layout:fragment="content">
+
+	<div class="bg-light py-3">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 mb-0">
+					<a href="/">Home</a> <span class="mx-2 mb-0">/</span> 
+					<strong class="text-black">상품상세</strong>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="site-section">
+		<div class="container">
+			<div class="row">
+				<input type="hidden" id="itemId" th:value="${item.id}">
+			
+				<div class="col-md-6">
+					<div class="item-entry">
+						<a href="#" class="product-item md-height bg-gray d-block"> 
+						<img th:src="${item.itemImgDtoList[0].imgUrl}"
+						class="rounded repImg" th:alt="${item.itemNm}">
+						</a>
+
+					</div>
+
+				</div>
+				<div class="col-md-6">
+					<span th:text="${item.itemSellStatus}" class="badge badge-primary mgb-15"></span> 
+					<h2 class="text-black" th:text="${item.itemNm}"></h2>
+					
+					<p>
+						<input type="hidden" th:value="${item.price}" id="price" name="price">
+						<strong class="text-primary h4" th:text="|${#numbers.formatInteger(item.price, 0, 'COMMA')}원|"></strong>
+					</p>
+					
+					<div class="mb-5">
+						<div class="input-group mb-3" style="max-width: 120px;">
+							<div class="input-group-prepend">
+								<button class="btn btn-outline-primary js-btn-minus count_btn"
+									type="button">&minus;</button>
+							</div>
+							<input type="text" class="form-control text-center" value="1"
+								placeholder="" aria-label="Example text with button addon"
+								aria-describedby="button-addon1" name="count" id="count">
+							<div class="input-group-append">
+								<button class="btn btn-outline-primary js-btn-plus count_btn"
+									type="button">&plus;</button>
+							</div>
+						</div>
+						<div>
+							<h5 style="display: inline-block; margin-right: 15px; color:black; font-weight:bold;'">총 상품 금액</h5>
+							<strong id="totalPrice" class="text-primary h4"></strong>
+						</div>
+					</div>
+					<p th:if="${#strings.equals(item.itemSellStatus, 'SELL')}">
+						<button type="button"
+						class="btn btn-light border border-primary btn-lg">장바구니
+						담기</button>
+						<button type="button" class="btn btn-primary btn-lg" onclick="order()"
+						>주문하기</button>
+					</p>
+					<p th:unless="${#strings.equals(item.itemSellStatus, 'SELL')}">
+						해당 상품은 현재 품절입니다.
+					</p>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="site-section block-3 site-blocks-2">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-7 site-section-heading text-center pt-4">
+					<h2>Product Detail</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<p style="white-space:pre-wrap;" th:text="${item.itemDetail}"></p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div th:each="itemImg : ${item.itemImgDtoList}" class="text-center">
+						<img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15" width="800">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+		$(document).ready(function(){
+			//처음 상세페이지 화면에 들어올 때 총 상품금액이 보여야 하므로
+			calculateTotalPrice();
+			
+			//수량 -, + 버튼을 누를때마다 총가격을 구한다
+			$(".count_btn").click(function(){
+				calculateTotalPrice();
+			})
+		});
+		
+		function calculateTotalPrice(){
+			var count = $("#count").val(); //수량
+			var price = $("#price").val(); //가격
+			var totalPrice = (price * count).toLocaleString('ko-KR'); //천단위 콤마
+			$("#totalPrice").html(totalPrice + '원'); //총가격 출력
+		}
+		
+		function order(){
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			
+			var url = "/order";
+			
+			//controller(서버)에 전달할 데이터
+			var paramData = {
+					itemId : $("#itemId").val(), //item의 id
+					count: $("#count").val() //수량
+			}
+			
+			// 중요. 전달하기 전에 데이터를 반드시 JSON -> 문자열로 만들어야 한다.
+			
+			var param = JSON.stringify(paramData);
+			
+			$.ajax({
+				url : url, //request URL
+				type : "POST", //전송방식
+				contentType : "application/json",
+				data : param, //서버에 전송할 데이터
+				beforeSend : function(xhr) {
+					//데이터를 전송하기 전에 헤더에 csrf값을 설정
+					xhr.setRequestHeader(header, token);
+				},
+				dataType : "json",
+				cache : false,
+				success : function(result, status) {
+					alert("주문이 완료 되었습니다." + result);
+					//location.href = '/';
+				},
+				error : function(jqXHR, status, error) {
+					if(jqXHR.status == '401'){
+						alert('로그인 후 이용해주세요.')
+						location.href = '/members/login';
+					}else{
+						//에러메세지 출력(ResponseEntity에서 받아온 값을 출력해준다)
+						alert(jqXHR.responseText);
+					}
+				}
+			});
+			
+		}
+	</script>
+</th:block>
+
+</html>
